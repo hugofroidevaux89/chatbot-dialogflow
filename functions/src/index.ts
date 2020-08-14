@@ -45,10 +45,10 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
     const agent = new WebhookClient({ request: request, response: response });
 
     const db = admin.firestore();
-    const email = request.body.queryResult.parameters['email'];
+    const queryResult = request.body.queryResult;
 
     const getPersona = () => {
-        const personaRead = db.collection('personas').where('email', '==', email).get();
+        const personaRead = db.collection('personas').where('email', '==', queryResult.parameters['email']).get();
 
         return personaRead.then((snapshot: any) => {
             agent.add('La información que he encontrado es la siguiente: ');
@@ -69,8 +69,31 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
         });
     };
 
+    const createPersona = () => {
+        
+        const data = {
+            nombre: queryResult.parameters['nombre'],
+            apellido: queryResult.parameters['apellido'],
+            fechaNacimiento: queryResult.parameters['fechaNacimiento'],
+            email: queryResult.parameters['email'],
+            imageUrl: queryResult.parameters['imageUrl'] ?? '',
+            debePrimeraEntrega: queryResult.parameters['debePrimeraEntrega'] ?? true,
+        }
+        
+        console.log('data: ', data);
+
+        const personaCreate = db.collection('personas').doc(queryResult.parameters['email']).set(data);
+
+        return personaCreate.then((snapshot: any) => {
+            agent.add(data.nombre + ' ' + data.apellido + ' está ahora en la lista de deudores.');
+        }).catch((err: any) => {
+            console.log('Error al crear el documento', err);
+        });
+    };
+
     const intentMap = new Map();
     intentMap.set('GetInfo.Persona', getPersona);
+    intentMap.set('Create.Persona.PedidoInfoNecesariaYCreacion', createPersona);
     agent.handleRequest(intentMap);
 
 });

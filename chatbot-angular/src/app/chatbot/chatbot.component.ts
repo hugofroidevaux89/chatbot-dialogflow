@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { finalize, catchError } from 'rxjs/operators';
 
 const dialogflowURL = 'https://us-central1-chatbot-1-13fa1.cloudfunctions.net/dialogflowGateway';
 
@@ -11,6 +12,8 @@ const dialogflowURL = 'https://us-central1-chatbot-1-13fa1.cloudfunctions.net/di
 export class ChatbotComponent implements OnInit {
 
   messages = [];
+  payloads: any;
+
   loading = false;
 
   // Random ID to maintain session with server
@@ -19,7 +22,7 @@ export class ChatbotComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.addBotMessage('Hola, mi nombre es Esteban. Cómo puedo ayudarte?');
+
   }
 
   handleUserMessage(event) {
@@ -29,27 +32,39 @@ export class ChatbotComponent implements OnInit {
 
     this.loading = true;
 
-    // Make an HTTP Request
-    this.http.post<any>(
-      dialogflowURL,
-      {
-        sessionId: this.sessionId,
-        queryInput: {
-          // event: {
-          //   name: 'USER_ONBOARDING',
-          //   languageCode: 'en-US'
-          // },
-          text: {
-            text,
-            languageCode: 'es'
-          }
+    const bodyRequest = {
+      sessionId: this.sessionId,
+      queryInput: {
+        // event: {
+        //   name: 'USER_ONBOARDING',
+        //   languageCode: 'en-US'
+        // },
+        text: {
+          text,
+          languageCode: 'es'
         }
       }
-    )
-    .subscribe(res => {
-      this.addBotMessage(res.queryResult.fulfillmentText);
-      this.loading = false;
-    });
+    };
+
+    // Make an HTTP Request
+    this.http.post<any>(dialogflowURL, bodyRequest)
+      .pipe(finalize(() => { this.loading = false; }))
+      .pipe(catchError((err, caught): any => {
+        console.log(err);
+      }))
+      .subscribe(res => {
+        if (res) {
+          const respuestaTipoTexto = res.queryResult.fulfillmentMessages.filter(m => m.message === 'text');
+          const respuestaTipoPayload = res.queryResult.fulfillmentMessages.filter(m => m.message === 'payload');
+
+          respuestaTipoTexto.forEach(mensaje => {
+            this.addBotMessage(mensaje.text.text[0]);
+          });
+
+          this.addBotPayLoad(respuestaTipoPayload);
+
+        }
+      });
   }
 
 
@@ -71,6 +86,10 @@ export class ChatbotComponent implements OnInit {
       avatar: '/assets/esteban.jpg',
       date: new Date()
     });
+  }
+
+  addBotPayLoad(payload) {
+    this.payloads = payload;
   }
 
 }

@@ -12,11 +12,10 @@
 
     <nb-chat-message *ngIf="loading" [nbSpinner]="loading" nbSpinnerStatus="info"
         type="text"
-        avatar="/assets/bot.jpg"
+        avatar="/assets/esteban.jpg"
         message="...">
         
     </nb-chat-message>
-
 
     <nb-chat-form (send)="handleUserMessage($event)"></nb-chat-form>
 
