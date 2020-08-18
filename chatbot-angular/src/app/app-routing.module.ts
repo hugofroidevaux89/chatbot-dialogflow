@@ -14,8 +14,8 @@ const routes: Routes = [
   {
     path: 'chatbot',
     canActivate: [AppRouteGuard],
-    component: ChatbotComponent,
-    data: { preload: true }
+    canLoad: [AppRouteGuard],
+    component: ChatbotComponent
   },
   {
     path: 'login',

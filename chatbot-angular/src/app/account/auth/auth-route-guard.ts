@@ -1,56 +1,27 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Router, RouterStateSnapshot } from '@angular/router';
-import { of, Subject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { take, map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
 
     constructor(
         private router: Router,
+        private afAuth: AngularFireAuth
     ) { }
 
     canActivateInternal(data: any, state: RouterStateSnapshot): Observable<boolean> {
-        // if (UrlHelper.isInstallUrl(location.href)) {
-        //     return of(true);
-        // }
-
-        // if (!this._sessionService.user) {
-        //     let sessionObservable = new Subject<any>();
-
-        //     this._refreshTokenService.tryAuthWithRefreshToken()
-        //         .subscribe(
-        //             (autResult: boolean) => {
-        //                 if (autResult) {
-        //                     sessionObservable.next(true);
-        //                     sessionObservable.complete();
-        //                     location.reload();
-        //                 } else {
-        //                     sessionObservable.next(false);
-        //                     sessionObservable.complete();
-        //                     this._router.navigate(['/account/login']);
-        //                 }
-        //             },
-        //             (error) => {
-        //                 sessionObservable.next(false);
-        //                 sessionObservable.complete();
-        //                 this._router.navigate(['/account/login']);
-        //             }
-        //         );
-        //     return sessionObservable;
-        // }
-
-        // if (!data || !data['permission']) {
-        //     return of(true);
-        // }
-
-        // if (this._permissionChecker.isGranted(data['permission'])) {
-        //     return of(true);
-        // }
-
-        this.router.navigate([this.selectBestRoute()]);
-        return of(false);
-
-       // return of(true);
+        return this.afAuth.authState
+        .pipe(take(1))
+        .pipe(map(authState => !!authState))
+        // tslint:disable-next-line: no-shadowed-variable
+        .pipe(tap(auth => {
+          if (!auth) {
+            this.router.navigate([this.selectBestRoute()]);
+          }
+        }));
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -66,27 +37,6 @@ export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
     }
 
     selectBestRoute(): string {
-
-        // if (!this._sessionService.user) {
-        //     return '/account/login';
-        // }
-
-        // if (this._permissionChecker.isGranted('Pages.Administration.Host.Dashboard')) {
-        //     return '/app/admin/hostDashboard';
-        // }
-
-        // if (this._permissionChecker.isGranted('Pages.Tenant.Dashboard')) {
-        //     return '/app/main/dashboard';
-        // }
-
-        // if (this._permissionChecker.isGranted('Pages.Tenants')) {
-        //     return '/app/admin/tenants';
-        // }
-
-        // if (this._permissionChecker.isGranted('Pages.Administration.Users')) {
-        //     return '/app/admin/users';
-        // }
-
-        return '/login';
+       return '/login';
     }
 }

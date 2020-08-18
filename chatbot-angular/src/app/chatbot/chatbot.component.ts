@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { finalize, catchError } from 'rxjs/operators';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 const dialogflowURL = 'https://us-central1-chatbot-1-13fa1.cloudfunctions.net/dialogflowGateway';
 
@@ -19,10 +20,10 @@ export class ChatbotComponent implements OnInit {
   // Random ID to maintain session with server
   sessionId = Math.random().toString(36).slice(-5);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private afAuth: AngularFireAuth) { }
 
   ngOnInit() {
-
+    this.afAuth.authState.subscribe(d => console.log(d));
   }
 
   handleUserMessage(event) {
@@ -90,6 +91,12 @@ export class ChatbotComponent implements OnInit {
 
   addBotPayLoad(payload) {
     this.payloads = payload;
+  }
+
+  logout() {
+    this.afAuth.signOut().then(() => {
+      window.location.reload();
+    });
   }
 
 }
