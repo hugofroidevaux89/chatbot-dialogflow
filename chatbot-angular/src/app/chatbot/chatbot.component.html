@@ -1,22 +1,33 @@
-<nb-chat title="Conversación con bot">
+
+
+
+<nb-layout>
     
-    <nb-chat-message *ngFor="let msg of messages"
-                     type="text"
-                     [message]="msg.text"
-                     [reply]="msg.reply"
-                     [sender]="msg.sender"
-                     [date]="msg.date"
-                     [avatar]="msg.avatar">
-    </nb-chat-message>
-
-
-    <nb-chat-message *ngIf="loading" [nbSpinner]="loading" nbSpinnerStatus="info"
-        type="text"
-        avatar="/assets/esteban.jpg"
-        message="...">
+    <nb-layout-column class="height-limit">
+  
+        <nb-chat title="Conversación con bot">
+    
+            <nb-chat-message *ngFor="let msg of messages"
+                             type="text"
+                             [message]="msg.text"
+                             [reply]="msg.reply"
+                             [sender]="msg.sender"
+                             [date]="msg.date"
+                             [avatar]="msg.avatar">
+            </nb-chat-message>
         
-    </nb-chat-message>
-
-    <nb-chat-form (send)="handleUserMessage($event)"></nb-chat-form>
-
-</nb-chat>
+        
+            <nb-chat-message *ngIf="loading" [nbSpinner]="loading" nbSpinnerStatus="info"
+                type="text"
+                avatar="/assets/esteban.jpg"
+                message="...">
+                
+            </nb-chat-message>
+        
+            <nb-chat-form (send)="handleUserMessage($event)"></nb-chat-form>
+        
+        </nb-chat>
+  
+    </nb-layout-column>
+  
+  </nb-layout>
