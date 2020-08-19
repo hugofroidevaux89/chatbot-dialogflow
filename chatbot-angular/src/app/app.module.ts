@@ -5,8 +5,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbChatModule, NbSpinnerModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbChatModule,
+  NbSpinnerModule, NbDialogModule, NbDatepickerModule, NbButtonModule, NbInputModule, NbCardModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { LoginComponent } from './account/login.component';
 import { AppRouteGuard } from './account/auth/auth-route-guard';
@@ -15,6 +17,7 @@ import { FirebaseUIModule, firebase, firebaseui } from 'firebaseui-angular';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from 'src/environments/environment';
+import { DialogDatePromptComponent } from './dialog/dialog-date-prompt.component';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -46,7 +49,8 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
   declarations: [
     AppComponent,
     ChatbotComponent,
-    LoginComponent
+    LoginComponent,
+    DialogDatePromptComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,7 +64,20 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
-    FirebaseUIModule.forRoot(firebaseUiAuthConfig)
+    NbButtonModule,
+    NbInputModule,
+    NbCardModule,
+    FirebaseUIModule.forRoot(firebaseUiAuthConfig),
+    NbDialogModule.forRoot({
+      autoFocus: true,
+      hasScroll: false,
+      closeOnEsc: false,
+      closeOnBackdropClick: false
+    }),
+    NbDatepickerModule.forRoot(),
+    NbDateFnsDateModule.forRoot({
+      format: 'dd-MM-yyyy'
+    })
   ],
   providers: [
     AppRouteGuard

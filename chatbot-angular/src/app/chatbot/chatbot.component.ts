@@ -1,29 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { finalize, catchError } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/auth';
-
-const dialogflowURL = 'https://us-central1-chatbot-1-13fa1.cloudfunctions.net/dialogflowGateway';
+import { NbDialogService, NbSpinnerService } from '@nebular/theme';
+import { DialogDatePromptComponent } from '../dialog/dialog-date-prompt.component';
+import { environment } from 'src/environments/environment';
+import { Persona } from '../models/persona';
+import { Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-chatbot',
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.scss']
 })
-export class ChatbotComponent implements OnInit {
+export class ChatbotComponent implements OnInit, AfterViewInit {
 
   messages = [];
   payloads: any;
 
   loading = false;
 
+  dateBirth = '';
+
+  userImageURL = '';
+  userName = 'Tú';
+
   // Random ID to maintain session with server
   sessionId = Math.random().toString(36).slice(-5);
 
-  constructor(private http: HttpClient, private afAuth: AngularFireAuth) { }
+  constructor(
+    private http: HttpClient,
+    private afAuth: AngularFireAuth,
+    private dialogService: NbDialogService,
+    private spinnerService: NbSpinnerService) { }
 
   ngOnInit() {
-    this.afAuth.authState.subscribe(d => console.log(d));
+  }
+
+  ngAfterViewInit(): void {
+    try {
+      this.initUsuario();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   handleUserMessage(event) {
@@ -48,7 +67,7 @@ export class ChatbotComponent implements OnInit {
     };
 
     // Make an HTTP Request
-    this.http.post<any>(dialogflowURL, bodyRequest)
+    this.http.post<any>(environment.dialogflowURL, bodyRequest)
       .pipe(finalize(() => { this.loading = false; }))
       .pipe(catchError((err, caught): any => {
         console.log(err);
@@ -68,14 +87,75 @@ export class ChatbotComponent implements OnInit {
       });
   }
 
+  altaUsuario(parametros) {
+    this.loading = true;
+
+    const bodyRequest = {
+      params: parametros
+    };
+
+    this.http.post<any>(environment.altaUsuarioURL, bodyRequest)
+      .pipe(finalize(() => { this.loading = false; }))
+      .pipe(catchError((err, caught): any => {
+        console.log(err);
+      }))
+      .subscribe(res => {
+        if (res) {
+          console.log(res);
+        }
+      });
+  }
+
+  initUsuario() {
+    this.afAuth.authState.subscribe(d => {
+
+      this.userImageURL = d.photoURL;
+      this.userName = d.displayName ? d.displayName : 'Tú';
+
+      const bodyRequest = {
+        params: {
+          email: d.email
+        }
+      };
+
+      this.http.post<any>(environment.checkUsuarioURL, bodyRequest)
+        .pipe(catchError((err, caught): any => {
+          console.log(err);
+        }))
+        .subscribe(res => {
+          if (!res) {
+            this.dialogService.open(DialogDatePromptComponent).onClose.subscribe(date => {
+              const params: Persona = {
+                displayName: d.displayName,
+                email: d.email,
+                fechaNacimiento: date,
+                imageURL: d.photoURL,
+                debePrimeraEntrega: true
+              };
+              this.altaUsuario(params);
+            });
+          }
+        });
+
+    });
+  }
+
+  async askDateOfBirth() {
+    return this.dialogService.open(DialogDatePromptComponent)
+      .onClose.subscribe(date => {
+        this.dateBirth = date;
+      });
+  }
+
 
   // Helpers
 
   addUserMessage(text) {
     this.messages.push({
       text,
-      sender: 'Tú',
-      reply: true,
+      sender: this.userName,
+      // reply: true,
+      avatar: this.userImageURL,
       date: new Date()
     });
   }
@@ -92,6 +172,7 @@ export class ChatbotComponent implements OnInit {
   addBotPayLoad(payload) {
     this.payloads = payload;
   }
+
 
   logout() {
     this.afAuth.signOut().then(() => {

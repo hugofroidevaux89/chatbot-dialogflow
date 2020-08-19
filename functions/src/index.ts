@@ -98,3 +98,62 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
 
 });
 
+export const altaUsuario = functions.https.onRequest((request, response) => {
+    const db = admin.firestore();
+
+    const params = request.body.params;
+
+    cors(request, response, async () => {
+        const data = {
+            displayName: params['displayName'],
+            fechaNacimiento: params['fechaNacimiento'],
+            email: params['email'],
+            imageUrl: params['imageURL'] ?? '',
+            debePrimeraEntrega: params['debePrimeraEntrega'] ?? true,
+        }
+        
+        console.log('data: ', data);
+
+        const personaCreate = db.collection('personas').doc(params['email']).set(data);
+
+        personaCreate.then((snapshot: any) => {
+            response.status(200).send('Alta completa');
+        }).catch((err: any) => {
+            console.log('Error al crear el documento', err);
+        });
+    })
+
+});
+
+export const existeUsuario = functions.https.onRequest((request, response) => {
+    const db = admin.firestore();
+
+    const params = request.body.params;
+
+    cors(request, response, async () => {
+      
+       const personaCreate = db.collection('personas').where('email', '==', params['email']).get();
+
+        personaCreate.then((snapshot: any) => {
+            
+            if(snapshot){
+                snapshot.forEach((doc: any) => {
+                    const data = doc.data();
+                    
+                    if(data.fechaNacimiento) {
+                        response.status(200).send(true);                    
+                    } else {
+                        response.status(200).send(false);   
+                    }
+                });
+            } 
+
+            response.status(200).send(false);
+
+        }).catch((err: any) => {
+            console.log('Error al consultar el documento', err);
+        });
+    })
+
+});
+

@@ -1,7 +1,7 @@
 <nb-layout>    
     <nb-layout-column class="height-limit">      
         
-        <button nbButton status="danger" (click)="logout()">Log Out</button>
+        <button class="button-logout" nbButton status="danger" (click)="logout()">Log Out</button>
   
         <nb-chat title="Conversación con bot">
     
@@ -24,8 +24,11 @@
         
             <nb-chat-form (send)="handleUserMessage($event)"></nb-chat-form>
         
-        </nb-chat>
-  
+        </nb-chat> 
     </nb-layout-column>
   
   </nb-layout>
+
+
+
+  

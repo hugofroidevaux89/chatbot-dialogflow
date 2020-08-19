@@ -1,0 +1,12 @@
+<nb-card>
+    <nb-card-header>
+        INGRESE SU FECHA DE NACIMIENTO
+    </nb-card-header>
+    <nb-card-body>
+        <input nbInput placeholder="dd-mm-aaaa" [nbDatepicker]="formpicker">
+        <nb-datepicker #formpicker></nb-datepicker>
+    </nb-card-body>
+    <nb-card-footer class="m-auto">
+        <button class="button-logout" nbButton status="success" (click)="close(formpicker.queue)">Aceptar</button>
+    </nb-card-footer>
+</nb-card>
