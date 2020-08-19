@@ -88,8 +88,6 @@ export class ChatbotComponent implements OnInit, AfterViewInit {
   }
 
   altaUsuario(parametros) {
-    this.loading = true;
-
     const bodyRequest = {
       params: parametros
     };
