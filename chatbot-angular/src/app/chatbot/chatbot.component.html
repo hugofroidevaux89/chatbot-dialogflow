@@ -1,33 +1,43 @@
-<nb-layout>    
-    <nb-layout-column class="height-limit">      
-        
+<div class="container">
+    <div class="header">
+        <div></div>
+        <img src="/assets/facturaz_logo.png" alt="">
         <button class="button-logout" nbButton status="danger" (click)="logout()">Log Out</button>
-  
-        <nb-chat title="Conversación con bot">
-    
-            <nb-chat-message *ngFor="let msg of messages"
-                             type="text"
-                             [message]="msg.text"
-                             [reply]="msg.reply"
-                             [sender]="msg.sender"
-                             [date]="msg.date"
-                             [avatar]="msg.avatar">
-            </nb-chat-message>
-        
-        
-            <nb-chat-message *ngIf="loading" [nbSpinner]="loading" nbSpinnerStatus="info"
-                type="text"
-                avatar="/assets/esteban.jpg"
-                message="...">
+    </div>
+    <div class="body">
+        <nb-layout>    
+            <nb-layout-column class="height-limit">      
                 
-            </nb-chat-message>
-        
-            <nb-chat-form (send)="handleUserMessage($event)"></nb-chat-form>
-        
-        </nb-chat> 
-    </nb-layout-column>
-  
-  </nb-layout>
+          
+                <nb-chat title="Conversación con bot">
+            
+                    <nb-chat-message *ngFor="let msg of messages"
+                                     type="text"
+                                     [message]="msg.text"
+                                     [reply]="msg.reply"
+                                     [sender]="msg.sender"
+                                     [date]="msg.date"
+                                     [avatar]="msg.avatar">
+                    </nb-chat-message>
+                
+                
+                    <nb-chat-message *ngIf="loading" [nbSpinner]="loading" nbSpinnerStatus="info"
+                        type="text"
+                        avatar="/assets/esteban.jpg"
+                        message="...">
+                        
+                    </nb-chat-message>
+                
+                    <nb-chat-form (send)="handleUserMessage($event)"></nb-chat-form>
+                
+                </nb-chat> 
+            </nb-layout-column>
+          
+          </nb-layout>
+    </div>
+</div>
+
+
 
 
 

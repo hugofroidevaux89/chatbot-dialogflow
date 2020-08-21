@@ -4,5 +4,23 @@
 }
 
 .height-limit{
-    height: 92vh !important;
+    height: 85vh !important;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 92vh;
+}
+
+.header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #ffc8bd;
+    padding: 15px 33px 15px 33px;
+}
+
+.header > img {
+    height: 60px;
 }
