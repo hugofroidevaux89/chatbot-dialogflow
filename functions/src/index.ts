@@ -56,7 +56,7 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
             snapshot.forEach((doc: any) => {
                 const data = doc.data();
                 agent.add(new Card({
-                    title: data.nombre + " " + data.apellido,
+                    title: data.displayName,
                     imageUrl: data.imageUrl,
                     text: data.email + '\n' + data.fechaNacimiento,
                     // buttonText: 'This is a button',
@@ -72,8 +72,7 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
     const createPersona = () => {
         
         const data = {
-            nombre: queryResult.parameters['nombre'],
-            apellido: queryResult.parameters['apellido'],
+            displayName: queryResult.parameters['displayName'],
             fechaNacimiento: queryResult.parameters['fechaNacimiento'],
             email: queryResult.parameters['email'],
             imageUrl: queryResult.parameters['imageUrl'] ?? '',
@@ -85,7 +84,7 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
         const personaCreate = db.collection('personas').doc(queryResult.parameters['email']).set(data);
 
         return personaCreate.then((snapshot: any) => {
-            agent.add(data.nombre + ' ' + data.apellido + ' está ahora en la lista de deudores.');
+            agent.add(data.displayName + ' está ahora en la lista de deudores.');
         }).catch((err: any) => {
             console.log('Error al crear el documento', err);
         });

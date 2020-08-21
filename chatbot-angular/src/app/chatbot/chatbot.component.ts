@@ -6,7 +6,6 @@ import { NbDialogService, NbSpinnerService } from '@nebular/theme';
 import { DialogDatePromptComponent } from '../dialog/dialog-date-prompt.component';
 import { environment } from 'src/environments/environment';
 import { Persona } from '../models/persona';
-import { Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-chatbot',
