@@ -1,26 +1,58 @@
-.button-logout{
-    margin: 10px;
-    float: right;
+.button-logout {
+  margin: 10px;
+  float: right;
 }
 
-.height-limit{
-    height: 85vh !important;
+.height-limit {
+  height: 85vh !important;
 }
 
 .container {
-    display: flex;
-    flex-direction: column;
-    height: 92vh;
+  display: flex;
+  flex-direction: column;
+  height: 92vh;
 }
 
-.header{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: #fddfd8;
-    padding: 15px 33px 15px 33px;
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #fddfd8;
+  padding: 15px 33px 15px 33px;
+  max-height: 80px;
 }
 
-.header > img {
-    height: 60px;
+.header > div:nth-child(1) {
+    width: 20%;
+}
+.header > div:nth-child(2) {
+    width: 60%;
+}
+.header > div:nth-child(3) {
+    width: 20%;
+}
+
+.logo {
+    text-align: center;
+}
+
+.logo-img {
+  max-height: 58px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-img {
+    width: auto;
+    height: 30px;
+    margin: auto;
+    border-radius: 100%;
+    margin: auto auto auto -10px;
+}
+
+.username {
+    margin: auto;
 }

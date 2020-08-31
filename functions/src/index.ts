@@ -5,6 +5,7 @@ import * as functions from 'firebase-functions';
 
 const cors = require('cors')({ origin: true });
 const dialogflow = require('dialogflow');
+const moment = require('moment');
 const { WebhookClient, Card } = require('dialogflow-fulfillment');
 const admin = require('firebase-admin');
 admin.initializeApp({
@@ -14,6 +15,18 @@ admin.initializeApp({
 const client = new dialogflow.v2.SessionsClient({
     // optional auth parameters.
 });
+const unirest = require("unirest");
+const req = unirest("GET", "https://community-open-weather-map.p.rapidapi.com/climate/month");
+req.query({
+	"q": "Rosario,ar"
+});
+
+req.headers({
+	"x-rapidapi-host": "community-open-weather-map.p.rapidapi.com",
+	"x-rapidapi-key": "508d77f8dbmshda54e6488d5d52dp1a6a9fjsn54a916d416c6",
+	"useQueryString": true
+});
+
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
@@ -110,7 +123,7 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
                 
                 const fechaNacimiento = new Date(data.fechaNacimiento);
                 
-                if(fechaNacimiento.getMonth() < fechaActual.getMonth()) {
+                if(fechaNacimiento.getMonth() < fechaActual.getMonth() || (fechaNacimiento.getMonth() === fechaActual.getMonth() && fechaNacimiento.getDay() < fechaActual.getDay())) {
                     fechaNacimiento.setFullYear(fechaActual.getFullYear() + 1);
                 } else {
                     fechaNacimiento.setFullYear(fechaActual.getFullYear());
@@ -131,7 +144,7 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
             agent.add('El próximo cumpleaños es: '); 
             
             listaPersonas.some(item => {                
-                item.fechaCumple = (item.fechaCumple.getDay() + 1) + '/' + (item.fechaCumple.getMonth() + 1) + '/' + item.fechaCumple.getFullYear();
+                item.fechaCumple = moment(item.fechaCumple.toISOString()).format('DD/MM/YYYY');
                 item.displayName = item.displayName ?? item.email;
                 agent.add(item.fechaCumple + ' - ' +  item.displayName);
                 return true;  
@@ -163,7 +176,7 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
                 
                 const fechaNacimiento = new Date(data.fechaNacimiento);
                 
-                if(fechaNacimiento.getMonth() < fechaActual.getMonth()) {
+                if(fechaNacimiento.getMonth() < fechaActual.getMonth() || (fechaNacimiento.getMonth() === fechaActual.getMonth() && fechaNacimiento.getDay() < fechaActual.getDay())) {
                     fechaNacimiento.setFullYear(fechaActual.getFullYear() + 1);
                 } else {
                     fechaNacimiento.setFullYear(fechaActual.getFullYear());
@@ -187,7 +200,7 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
 
             if(queryResult.parameters['cantidad']){
                 listaPersonas.some((item, index) => {          
-                    item.fechaCumple = (item.fechaCumple.getDay() + 1) + '/' + (item.fechaCumple.getMonth() + 1) + '/' + item.fechaCumple.getFullYear();
+                    item.fechaCumple = moment(item.fechaCumple.toISOString()).format('DD/MM/YYYY');
                     item.displayName = item.displayName ?? item.email;
                     listResult.push(item.fechaCumple + ' - ' +  item.displayName);
                     if (index === queryResult.parameters['cantidad'] - 1){
@@ -197,7 +210,7 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
                 });  
             } else {
                 listaPersonas.forEach(item => {                
-                    item.fechaCumple = (item.fechaCumple.getDay() + 1) + '/' + (item.fechaCumple.getMonth() + 1) + '/' + item.fechaCumple.getFullYear();
+                    item.fechaCumple = moment(item.fechaCumple.toISOString()).format('DD/MM/YYYY');
                     item.displayName = item.displayName ?? item.email;
                     listResult.push(item.fechaCumple + ' - ' +  item.displayName);
                 });   
@@ -214,11 +227,30 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
         });
     };
 
+    const pronosticoProxCumple = () => {
+        
+        const personaRead = db.collection('personas').get();
+
+        return personaRead.then((snapshot: any) => {
+            agent.add('La información que he encontrado es la siguiente: ');
+
+            req.end((res: any) => {
+                if (res.error) throw new Error(res.error);
+                agent.add(JSON.stringify(res.body));
+                console.log(res.body);               
+            });
+
+        }).catch((err: any) => {
+            console.log('Error al obtener el documento', err);
+        });
+    };
+
     const intentMap = new Map();
     intentMap.set('GetInfo.Persona', getPersona);
     intentMap.set('Create.Persona.PedidoInfoNecesariaYCreacion', createPersona);
     intentMap.set('GetInfo.CumpleMasProximo', cumpleProximo);
     intentMap.set('GetInfo.ProximosCumples', proximosCumples);
+    intentMap.set('GetInfo.PronosticoProxCumple', pronosticoProxCumple)
     //intentMap.set('GetInfo.ProximasEntregasFacturas', proximasEntregaFacturas);
     agent.handleRequest(intentMap);
 

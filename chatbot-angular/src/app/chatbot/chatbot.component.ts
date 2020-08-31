@@ -107,7 +107,7 @@ export class ChatbotComponent implements OnInit, AfterViewInit {
     this.afAuth.authState.subscribe(d => {
 
       this.userImageURL = d.photoURL;
-      this.userName = d.displayName ? d.displayName : 'Tú';
+      this.userName = d.displayName ? d.displayName : d.email;
 
       const bodyRequest = {
         params: {
@@ -150,8 +150,8 @@ export class ChatbotComponent implements OnInit, AfterViewInit {
   addUserMessage(text) {
     this.messages.push({
       text,
-      sender: this.userName,
-      // reply: true,
+      sender: 'Tú',
+      reply: true,
       avatar: this.userImageURL,
       date: new Date()
     });
