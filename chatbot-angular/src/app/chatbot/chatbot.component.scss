@@ -19,21 +19,21 @@
   justify-content: space-between;
   background-color: #fddfd8;
   padding: 15px 33px 15px 33px;
-  max-height: 80px;
+  height: 80px;
 }
 
 .header > div:nth-child(1) {
-    width: 20%;
+  width: 20%;
 }
 .header > div:nth-child(2) {
-    width: 60%;
+  width: 60%;
 }
 .header > div:nth-child(3) {
-    width: 20%;
+  width: 20%;
 }
 
 .logo {
-    text-align: center;
+  text-align: center;
 }
 
 .logo-img {
@@ -46,13 +46,124 @@
 }
 
 .profile-img {
-    width: auto;
-    height: 30px;
-    margin: auto;
-    border-radius: 100%;
-    margin: auto auto auto -10px;
+  width: auto;
+  height: 30px;
+  margin: auto;
+  border-radius: 100%;
+  margin: auto auto auto -10px;
 }
 
 .username {
-    margin: auto;
+  margin: auto;
+}
+
+// ========================================================================================================================
+// ========================================================================================================================
+// ========================================================================================================================
+
+.msg-box {
+  height: calc(100vh - 160px);
+  overflow-y: auto;
+  margin: auto;
+}
+.msg {
+  margin: 6px;
+  padding: 5px;
+  border-radius: 5px;
+  width: fit-content;
+  max-width: 75vw;
+  min-width: 200px;
+  display: flex;
+}
+
+.box-2 {
+  margin-top: 13px;
+}
+
+.send-box {
+  background-color: #fddfd8;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+}
+
+.avatar-img {
+  width: auto;
+  height: 50px;
+  margin: 5px;
+  border-radius: 100%;
+}
+
+.send-box__button span {
+  font-size: 1.8em;
+}
+.send-box__button {
+  margin: 15px 6px;
+  color: #272;
+  border: none;
+  background-color: #fddfd8;
+  font-size: 1.3em;
+  font-weight: bold;
+  border-radius: 100%;
+}
+.send-box__button:focus {
+  border: none;
+}
+.send-box__button:disabled {
+  color: #bbb;
+  background-color: #fddfd8;
+}
+
+.send-box__input {
+  border-radius: 5px;
+  margin: 15px 6px;
+  width: 50%;
+  min-width: 150px;
+  resize: none;
+  border: none;
+  padding: 5px;
+}
+.msg-box--msg.msg__sender {
+  flex: 1;
+  align-self: center;
+  padding: 5px;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+.msg.bot {
+  background-color: #eee;
+}
+
+.msg.bot small {
+  margin-left: 5px;
+}
+.msg.user small {
+  margin-right: 5px;
+}
+.msg.user {
+  margin-left: auto;
+  background-color: #fddfd8;
+  text-align: end;
+}
+.msg.user .msg-box--msg.msg__sender {
+  margin-left: auto;
+}
+
+.msg.user .msg-box--msg.msg__text {
+  margin-left: auto;
+}
+.msg-box--msg.msg__text {
+  width: fit-content;
+  background-color: #fff;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+.wait-text {
+  margin: auto;
+  font-size: 1.5em;
 }

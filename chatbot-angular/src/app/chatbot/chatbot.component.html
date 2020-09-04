@@ -2,49 +2,80 @@
     <div class="header">
         <div></div>
         <div class="logo">
-          <img class="logo-img" src="/assets/facturaz_logo.png" alt="">
+            <img class="logo-img"
+                 src="/assets/facturaz_logo.png"
+                 alt="">
         </div>
-        <div class="profile-info">            
-          <p class="username">{{userName}}</p>          
-          <img *ngIf="userImageURL" src="{{userImageURL}}" class="profile-img" alt="...">           
-          <button class="button-logout" nbButton status="danger" (click)="logout()">Log Out</button>
-        </div>        
+        <div class="profile-info">
+            <p class="username">{{userName}}</p>
+            <img *ngIf="userImageURL"
+                 src="{{userImageURL}}"
+                 class="profile-img"
+                 alt="...">
+            <button class="button-logout"
+                    nbButton
+                    status="danger"
+                    (click)="logout()">Log Out</button>
+        </div>
     </div>
     <div class="body">
-        <nb-layout>    
-            <nb-layout-column class="height-limit">      
-                
-          
-                <nb-chat title="Conversación con bot">
-            
-                    <nb-chat-message *ngFor="let msg of messages"
-                                     type="text"
-                                     [message]="msg.text"
-                                     [reply]="msg.reply"
-                                     [sender]="msg.sender"
-                                     [date]="msg.date"
-                                     [avatar]="msg.avatar">
-                    </nb-chat-message>
-                
-                
-                    <nb-chat-message *ngIf="loading" [nbSpinner]="loading" nbSpinnerStatus="info"
-                        type="text"
-                        avatar="/assets/esteban.jpg"
-                        message="...">
-                        
-                    </nb-chat-message>
-                
-                    <nb-chat-form (send)="handleUserMessage($event)"></nb-chat-form>
-                
-                </nb-chat> 
-            </nb-layout-column>
-          
-          </nb-layout>
+        <div #msgBox
+             class="msg-box">
+            <div class="msg"
+                 *ngFor="let msg of messages"
+                 [class.bot]="msg.sender !== userName"
+                 [class.user]="msg.sender === userName">
+                <ng-container *ngIf="msg.sender !== userName; else userMsg">
+                    <img [src]="msg.avatar"
+                         alt="avatar"
+                         class="avatar-img">
+                    <div class="box-2">
+                        <div class="msg-box--msg msg__sender">{{msg.sender}}</div>
+                        <div class="msg-box--msg msg__text">{{msg.text}}</div>
+                        <div>
+                            <small>{{msg.date | date: 'H:mm'}}</small>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-template #userMsg>
+                    <div class="box-2">
+                        <div class="msg-box--msg msg__sender">{{msg.sender}}</div>
+                        <div class="msg-box--msg msg__text">{{msg.text}}</div>
+                        <div>
+                            <small>{{msg.date | date: 'H:mm'}}</small>
+                        </div>
+                    </div>
+                    <img [src]="msg.avatar"
+                         alt="avatar"
+                         class="avatar-img">
+                </ng-template>
+            </div>
+        </div>
+        <form class="send-box">
+            <ng-container *ngIf="loading; else noLoading">
+                <div class="wait-text">
+                    Esperando la respuesta del bot...
+                </div>
+            </ng-container>
+
+            <ng-template #noLoading>
+                <input class="send-box__input"
+                       #messageInput
+                       name="message"
+                       [(ngModel)]="message"
+                       type="text"
+                       placeholder="Ingrese el un mensaje..."
+                       autocomplete="off"
+                       autofocus>
+                <button class="send-box__button"
+                        [disabled]="!message"
+                        (click)="handleUserMessage($event)">
+                    <span class="material-icons">
+                        send
+                    </span>
+                </button>
+            </ng-template>
+        </form>
     </div>
 </div>
-
-
-
-
-
-  
