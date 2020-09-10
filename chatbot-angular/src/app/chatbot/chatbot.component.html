@@ -1,4 +1,4 @@
-<div class="container">
+<div class="contenedor">
     <div class="header">
         <div></div>
         <div class="logo">
@@ -12,13 +12,16 @@
                  src="{{userImageURL}}"
                  class="profile-img"
                  alt="...">
-            <button class="button-logout"
+            <button class="button-logout btn btn-danger"
                     nbButton
-                    status="danger"
+                    type="button" 
                     (click)="logout()">Log Out</button>
         </div>
     </div>
     <div class="body">
+        <nb-layout>  
+        </nb-layout> 
+
         <div #msgBox
              class="msg-box">
             <div class="msg"
@@ -55,7 +58,7 @@
         <form class="send-box">
             <ng-container *ngIf="loading; else noLoading">
                 <div class="wait-text">
-                    Esperando la respuesta del bot...
+                    Esperando la respuesta de estebot...
                 </div>
             </ng-container>
 
@@ -65,7 +68,7 @@
                        name="message"
                        [(ngModel)]="message"
                        type="text"
-                       placeholder="Ingrese el un mensaje..."
+                       placeholder="Ingrese un mensaje..."
                        autocomplete="off"
                        autofocus>
                 <button class="send-box__button"

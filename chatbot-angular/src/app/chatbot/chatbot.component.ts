@@ -3,43 +3,41 @@ import {
   OnInit,
   AfterViewInit,
   ViewChild,
-  ElementRef,
-  ChangeDetectorRef,
-} from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { finalize, catchError } from "rxjs/operators";
-import { AngularFireAuth } from "@angular/fire/auth";
-import { NbDialogService, NbSpinnerService } from "@nebular/theme";
-import { DialogDatePromptComponent } from "../dialog/dialog-date-prompt.component";
-import { environment } from "src/environments/environment";
-import { Persona } from "../models/persona";
+  ElementRef
+} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { finalize, catchError } from 'rxjs/operators';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { NbDialogService } from '@nebular/theme';
+import { DialogDatePromptComponent } from '../dialog/dialog-date-prompt.component';
+import { environment } from 'src/environments/environment';
+import { Persona } from '../models/persona';
 
 @Component({
-  selector: "app-chatbot",
-  templateUrl: "./chatbot.component.html",
-  styleUrls: ["./chatbot.component.scss"],
+  selector: 'app-chatbot',
+  templateUrl: './chatbot.component.html',
+  styleUrls: ['./chatbot.component.scss'],
 })
 export class ChatbotComponent implements OnInit, AfterViewInit {
   messages = [];
   payloads: any;
 
   loading = false;
-  message = "";
-  dateBirth = "";
+  message = '';
+  dateBirth = '';
 
-  userImageURL = "";
-  userName = "Tú";
+  userImageURL = '';
+  userName = 'Tú';
 
   // Random ID to maintain session with server
   sessionId = Math.random().toString(36).slice(-5);
 
-  @ViewChild("msgBox") msgBox: ElementRef;
+  @ViewChild('msgBox') msgBox: ElementRef;
 
   constructor(
     private http: HttpClient,
     private afAuth: AngularFireAuth,
-    private dialogService: NbDialogService,
-    private spinnerService: NbSpinnerService
+    private dialogService: NbDialogService
   ) {}
 
   ngOnInit() {}
@@ -59,7 +57,7 @@ export class ChatbotComponent implements OnInit, AfterViewInit {
     event.preventDefault();
     console.log(event);
     const text = this.message;
-    this.message = "";
+    this.message = '';
     this.addUserMessage(text);
     this.scrollToBottom();
     this.loading = true;
@@ -73,7 +71,7 @@ export class ChatbotComponent implements OnInit, AfterViewInit {
         // },
         text: {
           text,
-          languageCode: "es",
+          languageCode: 'es',
         },
       },
     };
@@ -94,10 +92,10 @@ export class ChatbotComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           const respuestaTipoTexto = res.queryResult.fulfillmentMessages.filter(
-            (m) => m.message === "text"
+            (m) => m.message === 'text'
           );
           const respuestaTipoPayload = res.queryResult.fulfillmentMessages.filter(
-            (m) => m.message === "payload"
+            (m) => m.message === 'payload'
           );
 
           respuestaTipoTexto.forEach((mensaje) => {
@@ -171,14 +169,6 @@ export class ChatbotComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async askDateOfBirth() {
-    return this.dialogService
-      .open(DialogDatePromptComponent)
-      .onClose.subscribe((date) => {
-        this.dateBirth = date;
-      });
-  }
-
   // Helpers
 
   addUserMessage(text) {
@@ -194,8 +184,8 @@ export class ChatbotComponent implements OnInit, AfterViewInit {
   addBotMessage(text) {
     this.messages.push({
       text,
-      sender: "Estebot",
-      avatar: "/assets/esteban.jpg",
+      sender: 'Estebot',
+      avatar: '/assets/esteban.jpg',
       date: new Date(),
     });
   }
