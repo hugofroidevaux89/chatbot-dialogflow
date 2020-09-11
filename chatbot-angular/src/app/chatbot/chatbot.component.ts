@@ -176,6 +176,7 @@ export class ChatbotComponent implements OnInit, AfterViewInit {
   // Helpers
 
   addUserMessage(text) {
+    text = text.replace(".", ".\n");
     this.messages.push({
       text,
       sender: this.userName,
