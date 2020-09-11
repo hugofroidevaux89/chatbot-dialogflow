@@ -175,8 +175,8 @@ export class ChatbotComponent implements OnInit, AfterViewInit {
 
   // Helpers
 
-  addUserMessage(text) {
-    text = text.replace(".", ".\n");
+  addUserMessage(text: string) {
+    text = text.trim();
     this.messages.push({
       text,
       sender: this.userName,
@@ -187,6 +187,7 @@ export class ChatbotComponent implements OnInit, AfterViewInit {
   }
 
   addBotMessage(text, card?) {
+    text = text.trim();
     this.messages.push({
       text,
       card,
