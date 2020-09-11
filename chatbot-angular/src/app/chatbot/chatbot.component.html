@@ -1,3 +1,5 @@
+<nb-layout style="position: absolute;left: -50vw">
+</nb-layout>
 <div class="contenedor">
     <div class="header">
         <div></div>
@@ -14,7 +16,7 @@
                  alt="...">
             <button class="button-logout btn btn-danger"
                     nbButton
-                    type="button" 
+                    type="button"
                     (click)="logout()">Log Out</button>
         </div>
     </div>
@@ -32,6 +34,18 @@
                     <div class="box-2">
                         <div class="msg-box--msg msg__sender">{{msg.sender}}</div>
                         <div class="msg-box--msg msg__text">{{msg.text}}</div>
+                        <div *ngIf="msg.card"
+                             class="msg-box--msg msg__text">
+                            <div>
+                                {{msg.card.title}}
+                            </div>
+                            <div>
+                                {{msg.card.subtitle}}
+                            </div>
+                            <img [src]="msg.card.imageUri"
+                                 alt="avatar-solicitado"
+                                 class="avatar-img" /> <br>
+                        </div>
                         <div>
                             <small>{{msg.date | date: 'H:mm'}}</small>
                         </div>
