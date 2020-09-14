@@ -68,15 +68,18 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
 
             snapshot.forEach((doc: any) => {
                 const data = doc.data();
+
+                const fechaNacimiento = new Date(data.fechaNacimiento);
+                const fechaNacimientoFormatted = moment(fechaNacimiento.toISOString()).format('DD/MM/YYYY');
+
                 agent.add(new Card({
-                    title: data.displayName,
+                    title: 'Nombre para mostrar: ' + data.displayName,
                     imageUrl: data.imageUrl,
-                    text: data.email + '\n' + data.fechaNacimiento,
+                    text: 'Fecha nacimiento: ' + fechaNacimientoFormatted
                     // buttonText: 'This is a button',
                     // buttonUrl: 'https://assistant.google.com/'
                 }))
             });
-
         }).catch((err: any) => {
             console.log('Error al obtener el documento', err);
         });
@@ -141,7 +144,7 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
             
             listaPersonas.sort((a: any, b: any) => { return a.fechaCumple - b.fechaCumple});          
 
-            agent.add('El próximo cumpleaños es: '); 
+            agent.add('La próxima entrega de factura es: '); 
             
             listaPersonas.some(item => {                
                 item.fechaCumple = moment(item.fechaCumple.toISOString()).format('DD/MM/YYYY');
@@ -193,9 +196,7 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
             });
             
             listaPersonas.sort((a: any, b: any) => { return a.fechaCumple - b.fechaCumple});          
-
-            agent.add('Los próximos cumpleaños son: ');
-            
+ 
             const listResult: any[] = [];
 
             if(queryResult.parameters['cantidad']){
@@ -207,21 +208,21 @@ export const dialogflowFirebaseFulfillment = functions.https.onRequest((request,
                         return true;
                     }
                     return false;                    
-                });  
+                }); 
+            
             } else {
                 listaPersonas.forEach(item => {                
                     item.fechaCumple = moment(item.fechaCumple.toISOString()).format('DD/MM/YYYY');
                     item.displayName = item.displayName ?? item.email;
                     listResult.push(item.fechaCumple + ' - ' +  item.displayName);
                 });   
-            }
-
+            } 
+ 
             if(listResult.length > 0){
-                agent.add('Los próximos ' + queryResult.parameters['cantidad'] + ' cumpleaños son: ' + listResult.join('; '));
+                agent.add('Las próximas ' + (queryResult.parameters['cantidad'] ?? '') + ' entregas son: ' + listResult.join('; '));
             } else {
                 agent.add('No he registrado cumpleaños aún');
-            }
-            
+            }    
         }).catch((err: any) => {
             console.log('Error al obtener el documento', err);
         });
@@ -263,7 +264,7 @@ export const altaUsuario = functions.https.onRequest((request, response) => {
 
     cors(request, response, async () => {
         const data = {
-            displayName: params['displayName'],
+            displayName: params['displayName'] ?? params['email'],
             fechaNacimiento: params['fechaNacimiento'],
             email: params['email'],
             imageUrl: params['imageURL'] ?? '',

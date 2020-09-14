@@ -66,7 +66,7 @@
 // ========================================================================================================================
 
 .msg-box {
-  height: calc(100vh - 160px);
+  height: calc(95vh - 160px);
   overflow-y: auto;
   margin: auto;
 }
@@ -179,4 +179,14 @@
 .wait-text {
   margin: auto;
   font-size: 1.5em;
+}
+
+.card-img {
+  max-height: 107px;
+  margin: auto;
+  width: auto;
+  justify-self: center;
+  display: block;
+  border: solid #edf1f7 3px;
+  border-radius: 7px;
 }

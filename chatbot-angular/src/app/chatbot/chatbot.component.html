@@ -33,18 +33,18 @@
                          class="avatar-img">
                     <div class="box-2">
                         <div class="msg-box--msg msg__sender">{{msg.sender}}</div>
-                        <pre class="msg-box--msg msg__text">{{msg.text}}</pre>
+                        <pre *ngIf="msg.text" class="msg-box--msg msg__text">{{msg.text}}</pre>
                         <div *ngIf="msg.card"
                              class="msg-box--msg msg__text">
+                            <img *ngIf="msg.card.imageUri" [src]="msg.card.imageUri"
+                                  alt="avatar-solicitado"
+                                  class="card-img" />
                             <div>
                                 {{msg.card.title}}
                             </div>
                             <div>
                                 {{msg.card.subtitle}}
-                            </div>
-                            <img [src]="msg.card.imageUri"
-                                 alt="avatar-solicitado"
-                                 class="avatar-img" /> <br>
+                            </div>                           
                         </div>
                         <div>
                             <small>{{msg.date | date: 'H:mm'}}</small>
