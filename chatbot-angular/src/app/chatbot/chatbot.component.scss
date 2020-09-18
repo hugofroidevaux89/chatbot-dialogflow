@@ -17,7 +17,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background-color: #fddfd8;
+  background-color: #FFE7BD;
   padding: 15px 33px 15px 33px;
   height: 80px;
   margin-bottom: 50px;
@@ -85,7 +85,7 @@
 }
 
 .send-box {
-  background-color: #fddfd8;
+  background-color: #FFE7BD;
   width: 100%;
   height: 70px;
   display: flex;
@@ -111,7 +111,7 @@
   margin: 15px 6px;
   color: #36f;
   border: none;
-  background-color: #fddfd8;
+  background-color: #FFE7BD;
   font-size: 1.3em;
   font-weight: bold;
   border-radius: 100%;
@@ -121,7 +121,7 @@
 }
 .send-box__button:disabled {
   color: #bbb;
-  background-color: #fddfd8;
+  background-color: #FFE7BD;
 }
 
 .send-box__input {
