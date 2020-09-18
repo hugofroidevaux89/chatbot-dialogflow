@@ -1,4 +1,4 @@
-const express = requiere('express');
+const express = require('express');
 const app = express();
 const path = require('path');
 const forceSSL = function() {
@@ -11,10 +11,10 @@ const forceSSL = function() {
         next();
     }
 }
-app.use(express.static(__dirname + '/dist/heroku-deployment'));
+app.use(express.static(__dirname + '/dist/chatbot'));
 
 app.get('/*', function(req, res){
-    res.sendFile(path.join(__dirname + '/dist/heroku-deployment/index.html'));
+    res.sendFile(path.join(__dirname + '/dist/chatbot/index.html'));
 });
 
 app.listen(process.env.PORT || 8080);
