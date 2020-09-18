@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -28,6 +28,7 @@
     "bootstrap": "^4.5.2",
     "date-fns": "2.15.0",
     "eva-icons": "^1.1.2",
+    "express": "^4.17.1",
     "firebase": "^7.18.0",
     "firebaseui": "^4.6.1",
     "firebaseui-angular": "^5.0.0",
